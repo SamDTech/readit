@@ -8,10 +8,17 @@ const router = Router();
 const register = asyncHandler(async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
 
-    const user = User.create({ email, password, username });
+  const emailUser = await User.findOne({ email });
+  const usernameUser = await User.findOne({ username });
 
-    const errors = await validate(user)
-    if(errors.length > 0) return res.status(500).json({errors})
+  if (emailUser || usernameUser) {
+    return res.status(400).json({ message: "email or username already exist" });
+  }
+
+  const user = User.create({ email, password, username });
+
+  const errors = await validate(user);
+  if (errors.length > 0) return res.status(500).json({ errors });
 
   await user.save();
 
