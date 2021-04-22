@@ -1,4 +1,4 @@
-import { IsEmail, IsEmpty, Length, Min } from "class-validator";
+import { IsEmail, Length } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,

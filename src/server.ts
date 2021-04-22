@@ -4,6 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import { authRouter } from "./routes/auth";
 import trim from "./middlewares/trim";
+import errorMiddleware from "./middlewares/errorHandler";
 
 const app = express();
 
@@ -18,6 +19,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+
+// global Error Handler
+app.use(errorMiddleware);
 
 app.listen(4000, async () => {
   console.log("app running on PORT 5000");
