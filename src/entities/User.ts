@@ -1,4 +1,3 @@
-import { IsEmail, Length } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -24,17 +23,14 @@ export class User extends BaseEntity {
   id: number;
 
   @Index()
-  @Length(3)
   @Column({ unique: true })
   username: string;
 
   @Index()
   @Column({ unique: true })
-  @IsEmail()
   email: string;
 
   @Exclude()
-  @Length(5)
   @Column()
   password: string;
 
