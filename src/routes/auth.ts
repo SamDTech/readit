@@ -1,4 +1,3 @@
-import { validate } from "class-validator";
 import { NextFunction, Request, Response, Router } from "express";
 import asyncHandler from "express-async-handler";
 import { User } from "../entities/User";
@@ -6,7 +5,10 @@ import validationMiddleware from "../middlewares/validationMiddleware";
 import AppError from "../utils/appError";
 import CreateUserDto from "../dto/register.dto";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import LoginUserDto from "../dto/login.dto";
+import generateToken from "../utils/generateToken";
+import createSendToken from "../utils/generateToken";
 
 const router = Router();
 
@@ -35,18 +37,20 @@ const login = asyncHandler(
 
     const user = await User.findOne({ username });
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    //const passwordMatch = await bcrypt.compare(password, user.password);
 
-    if (!user || !passwordMatch) {
+    if (!user ) {
       return next(new AppError(401, "Invalid login credential"));
     }
 
-    return res.status(200).json(user);
+    // generate Token
+
+    createSendToken(user, 200, res);
   }
 );
 
 router.post("/register", validationMiddleware(CreateUserDto), register);
 
-router.post('/login', validationMiddleware(LoginUserDto), login)
+router.post("/login", validationMiddleware(LoginUserDto), login);
 
 export { router as authRouter };

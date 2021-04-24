@@ -2,7 +2,9 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import { authRouter } from "./routes/auth";
+import dotenv from "dotenv";
 import trim from "./middlewares/trim";
 import errorMiddleware from "./middlewares/errorHandler";
 
@@ -11,6 +13,8 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cookieParser());
+dotenv.config();
 
 app.use(trim);
 
