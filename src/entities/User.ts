@@ -42,7 +42,7 @@ export class User extends BaseEntity {
 
   @BeforeInsert()
   encryptPassword = async () => {
-    this.password = await bcrypt.hash(this.password, 12);
+    this.password = await bcrypt.hash(this.password, 10);
   };
 
   toJSON() {

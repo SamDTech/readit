@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { CookieOptions, Response } from "express";
-import CreateUserDto from "../dto/register.dto";
 import { User } from "../entities/User";
 
 const signToken = (username: string) => {
@@ -25,9 +24,8 @@ const createSendToken = (user: User, statusCode: number, res: Response) => {
     httpOnly: true,
   };
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
-  res.cookie("jwt", token, cookieOptions);
+  res.cookie("token", token, cookieOptions);
 
-  user.password = undefined;
   res.status(statusCode).json({
     status: true,
     token,

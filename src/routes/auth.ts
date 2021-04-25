@@ -27,7 +27,7 @@ const register = asyncHandler(
 
     await user.save();
 
-    res.status(201).json(user);
+    createSendToken(user, 201, res);
   }
 );
 
@@ -37,9 +37,10 @@ const login = asyncHandler(
 
     const user = await User.findOne({ username });
 
-    //const passwordMatch = await bcrypt.compare(password, user.password);
+    console.log("Password", user);
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-    if (!user ) {
+    if (!user || !passwordMatch) {
       return next(new AppError(401, "Invalid login credential"));
     }
 
