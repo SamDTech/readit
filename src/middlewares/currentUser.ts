@@ -19,8 +19,9 @@ declare global {
 }
 
 const protect = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    let token: string;
+  async (req: Request, _: Response, next: NextFunction) => {
+     let token: string;
+
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
@@ -30,13 +31,15 @@ const protect = asyncHandler(
       token = req.cookies.token;
     }
 
-    if (!token) {
+
+
+    if (!token!) {
       return next(
         new AppError(401, "You are not logged In! Please login to get access")
       );
     }
 
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY!);
 
     const currentUser = await User.findOne({ username: decoded.username });
 
