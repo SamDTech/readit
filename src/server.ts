@@ -12,11 +12,14 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
-app.use(morgan("dev"));
+if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+
 app.use(cookieParser());
 dotenv.config();
 
 app.use(trim);
+
+const PORT = process.env.PORT || 4000
 
 app.get("/", (req, res) => {
   res.send("hello world");
@@ -27,8 +30,8 @@ app.use("/api/auth", authRouter);
 // global Error Handler
 app.use(errorMiddleware);
 
-app.listen(4000, async () => {
-  console.log("app running on PORT 5000");
+app.listen(PORT, async () => {
+  console.log(`app running on PORT ${PORT}`);
 
   try {
     await createConnection();

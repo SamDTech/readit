@@ -5,10 +5,10 @@ import validationMiddleware from "../middlewares/validationMiddleware";
 import AppError from "../utils/appError";
 import CreateUserDto from "../dto/register.dto";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+
 import LoginUserDto from "../dto/login.dto";
-import generateToken from "../utils/generateToken";
 import createSendToken from "../utils/generateToken";
+import { protect } from "../middlewares/currentUser";
 
 const router = Router();
 
@@ -37,7 +37,6 @@ const login = asyncHandler(
 
     const user = await User.findOne({ username });
 
-    console.log("Password", user);
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!user || !passwordMatch) {
@@ -50,8 +49,24 @@ const login = asyncHandler(
   }
 );
 
+const me = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json(req.currentUser);
+  }
+);
+
+const logout = asyncHandler(async (req: Request, res: Response) => {
+  res.cookie("token", "loggedOut", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({
+    status: true,
+  });
+});
+
 router.post("/register", validationMiddleware(CreateUserDto), register);
-
 router.post("/login", validationMiddleware(LoginUserDto), login);
-
+router.get("/me", protect, me);
+router.get("/logout", protect, logout);
 export { router as authRouter };
