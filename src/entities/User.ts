@@ -1,26 +1,14 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  Index,
-  CreateDateColumn,
-  UpdateDateColumn,
-  BeforeInsert,
-} from "typeorm";
+import { Entity, Column, Index, BeforeInsert } from "typeorm";
 import bcrypt from "bcryptjs";
-import { classToPlain, Exclude } from "class-transformer";
+import { Exclude } from "class-transformer";
+import Base from "./Entity";
 
 @Entity("users")
-export class User extends BaseEntity {
+export class User extends Base {
   constructor(user: Partial<User>) {
     super();
     Object.assign(this, user);
   }
-
-  @Exclude()
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @Index()
   @Column({ unique: true })
@@ -34,18 +22,8 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
   @BeforeInsert()
   encryptPassword = async () => {
-    this.password = await bcrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 12);
   };
-
-  toJSON() {
-    return classToPlain(this);
-  }
 }
