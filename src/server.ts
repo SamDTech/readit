@@ -7,6 +7,8 @@ import { authRouter } from "./routes/auth";
 import dotenv from "dotenv";
 import trim from "./middlewares/trim";
 import errorMiddleware from "./middlewares/errorHandler";
+import { postRouter } from "./routes/posts";
+import { subRouter } from "./routes/subs";
 
 const app = express();
 
@@ -26,6 +28,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/posts", postRouter)
+app.use("/api/subs", subRouter);
+
 
 // global Error Handler
 app.use(errorMiddleware);

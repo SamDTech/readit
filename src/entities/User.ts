@@ -1,7 +1,8 @@
-import { Entity, Column, Index, BeforeInsert } from "typeorm";
+import { Entity, Column, Index, BeforeInsert, OneToMany } from "typeorm";
 import bcrypt from "bcryptjs";
 import { Exclude } from "class-transformer";
 import Base from "./Entity";
+import { Post } from "./Post";
 
 @Entity("users")
 export class User extends Base {
@@ -21,6 +22,9 @@ export class User extends Base {
   @Exclude()
   @Column()
   password: string;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 
   @BeforeInsert()
   encryptPassword = async () => {

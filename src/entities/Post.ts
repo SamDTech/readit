@@ -1,5 +1,16 @@
-import { BaseEntity, Column, Entity, Index } from "typeorm";
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+} from "typeorm";
+import { makeid, slugify } from "../utils/helper";
 import Base from "./Entity";
+import { Sub } from "./Sub";
+import { User } from "./User";
 
 @Entity("posts")
 export class Post extends Base {
@@ -24,4 +35,18 @@ export class Post extends Base {
 
   @Column()
   subName: string;
+
+  @ManyToOne(() => User, (user) => user.posts)
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
+  user: User;
+
+  @ManyToOne(() => Sub, (sub) => sub.posts)
+  @JoinColumn({ name: "subName", referencedColumnName: "name" })
+  sub: Sub;
+
+  @BeforeInsert()
+  makeIdAndSlug = () => {
+    this.slug = slugify(this.title);
+    this.identifier = makeid(7);
+  };
 }
