@@ -23,7 +23,7 @@ app.use(trim);
 
 const PORT = process.env.PORT || 4000
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("hello world");
 });
 

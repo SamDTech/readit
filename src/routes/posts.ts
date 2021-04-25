@@ -7,7 +7,7 @@ import { protect } from "../middlewares/currentUser";
 import validationMiddleware from "../middlewares/validationMiddleware";
 
 const createPost = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, _: NextFunction) => {
     const { title, body, sub } = req.body;
 
     const user = req.currentUser;

@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   BeforeInsert,
   Column,
   Entity,

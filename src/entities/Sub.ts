@@ -1,5 +1,4 @@
 import {
-  BeforeInsert,
   Column,
   Entity,
   Index,
@@ -7,7 +6,7 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { makeid, slugify } from "../utils/helper";
+
 import Base from "./Entity";
 import { Post } from "./Post";
 import { User } from "./User";

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import AppError from '../utils/appError';
+import AppError from "../utils/appError";
 
 function errorMiddleware(
   error: AppError,
-  request: Request,
+  _: Request,
   response: Response,
   next: NextFunction
 ) {
@@ -13,6 +13,8 @@ function errorMiddleware(
     status,
     message,
   });
+
+  next;
 }
 
 export default errorMiddleware;

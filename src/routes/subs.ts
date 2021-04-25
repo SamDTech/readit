@@ -1,14 +1,13 @@
 import { Response, Router, Request, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import { getRepository } from "typeorm";
-import { createPostDto } from "../dto/post.dto";
-import { Post } from "../entities/Post";
+
 import { Sub } from "../entities/Sub";
-import { User } from "../entities/User";
+
 import { protect } from "../middlewares/currentUser";
 import validationMiddleware from "../middlewares/validationMiddleware";
-import AppError from '../utils/appError';
-import { createSubDto } from '../dto/sub.dto';
+import AppError from "../utils/appError";
+import { createSubDto } from "../dto/sub.dto";
 
 const createSub = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -19,11 +18,11 @@ const createSub = asyncHandler(
     const sub = await getRepository(Sub)
       .createQueryBuilder("sub")
       .where("lower(sub.name) = :name", { name: name.toLowerCase() })
-        .getOne();
+      .getOne();
 
-        if (sub) {
-            return next(new AppError(400, 'Sub exists already'))
-        }
+    if (sub) {
+      return next(new AppError(400, "Sub exists already"));
+    }
 
     const newSub = Sub.create({ title, name, user, description });
 
@@ -35,6 +34,6 @@ const createSub = asyncHandler(
 
 const router = Router();
 
-router.post("/",validationMiddleware(createSubDto), protect, createSub);
+router.post("/", validationMiddleware(createSubDto), protect, createSub);
 
 export { router as subRouter };

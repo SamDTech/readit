@@ -37,6 +37,10 @@ const login = asyncHandler(
 
     const user = await User.findOne({ username });
 
+    if (!user) {
+      return next(new AppError(401, "Invalid login credential"));
+    }
+
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!user || !passwordMatch) {
@@ -50,12 +54,12 @@ const login = asyncHandler(
 );
 
 const me = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, _: NextFunction) => {
     res.status(200).json(req.currentUser);
   }
 );
 
-const logout = asyncHandler(async (req: Request, res: Response) => {
+const logout = asyncHandler(async (_: Request, res: Response) => {
   res.cookie("token", "loggedOut", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,

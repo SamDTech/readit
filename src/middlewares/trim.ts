@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (req: Request, _: Response, next: NextFunction) => {
   const body = Object.keys(req.body);
 
   const exeptions = ["password"];
