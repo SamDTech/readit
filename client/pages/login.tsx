@@ -8,9 +8,7 @@ import { toast } from "react-toastify";
 import InputGroup from "../components/InputGroup";
 
 export default function Register() {
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [agreement, setAgreement] = useState(false);
   const [password, setPassword] = useState("");
 
   const router = useRouter();
@@ -18,32 +16,27 @@ export default function Register() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!agreement) {
-      toast.error("You must agree to T&Cs");
-      return;
-    }
-
     try {
-      await axios.post("/auth/register", {
-        email,
+      await axios.post("/auth/login", {
         password,
         username,
-      });
-      setEmail("");
+      }, {withCredentials:true});
+
       setPassword("");
       setUsername("");
 
-      router.push("/login");
+      router.push("/");
     } catch (error) {
-      toast.error(error.response.data.message);
+      console.log(error)
+       toast.error(error.response.data.message);
     }
   };
 
   return (
     <div className="flex">
       <Head>
-        <title>Register</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Login</title>
+
       </Head>
 
       <div
@@ -59,25 +52,6 @@ export default function Register() {
           </p>
 
           <form action="" onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <input
-                type="checkbox"
-                className="mr-1 cursor-pointer"
-                id="agreement"
-                checked={agreement}
-                onChange={(e) => setAgreement(e.target.checked)}
-              />
-              <label htmlFor="agreement" className="text-xs cursor-pointer">
-                I agree to get emails and cool stuffs from Readit
-              </label>
-            </div>
-
-            <InputGroup
-              type="email"
-              placeholder="Email"
-              value={email}
-              setValue={setEmail}
-            />
             <InputGroup
               type="text"
               placeholder="Username"
@@ -92,13 +66,13 @@ export default function Register() {
             />
 
             <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border-blue-500 rounded">
-              Sign Up
+              Login
             </button>
           </form>
           <small>
-            Already a readitor?
-            <Link href="/login">
-              <a className="ml-1 text-blue-500 uppercase"> Login</a>
+            Don't have an account?
+            <Link href="/register">
+              <a className="ml-1 text-blue-500 uppercase"> Register</a>
             </Link>
           </small>
         </div>

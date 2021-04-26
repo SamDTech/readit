@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
 import morgan from "morgan";
-import cors from 'cors'
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./routes/auth";
 import dotenv from "dotenv";
@@ -12,27 +12,26 @@ import { postRouter } from "./routes/posts";
 import { subRouter } from "./routes/subs";
 
 const app = express();
+dotenv.config();
 
 // Middlewares
 app.use(express.json());
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
-app.use(cors())
+app.use(cors({ credentials: true, origin: process.env.ORIGIN, optionsSuccessStatus: 200 }));
 
 app.use(cookieParser());
-dotenv.config();
 
 app.use(trim);
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 4000;
 
 app.get("/", (_, res) => {
   res.send("hello world");
 });
 
 app.use("/api/auth", authRouter);
-app.use("/api/posts", postRouter)
+app.use("/api/posts", postRouter);
 app.use("/api/subs", subRouter);
-
 
 // global Error Handler
 app.use(errorMiddleware);
