@@ -5,6 +5,7 @@ import { Post } from "../entities/Post";
 import { Sub } from "../entities/Sub";
 import { protect } from "../middlewares/currentUser";
 import validationMiddleware from "../middlewares/validationMiddleware";
+import AppError from "../utils/appError";
 
 const createPost = asyncHandler(
   async (req: Request, res: Response, _: NextFunction) => {
@@ -23,8 +24,37 @@ const createPost = asyncHandler(
   }
 );
 
+const getPosts = asyncHandler(async (_: Request, res: Response) => {
+  const posts = await Post.find({
+    order: { createdAt: "DESC" },
+  });
+
+  res.status(200).json(posts);
+});
+
+const getPost = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { identifier, slug } = req.params;
+
+    const post = await Post.findOne(
+      { identifier, slug },
+      { relations: ["sub"] }
+    );
+
+    if (!post) {
+      return next(new AppError(404, "Post not found"));
+    }
+
+    res.status(200).json(post);
+  }
+);
+
 const router = Router();
 
 router.post("/", validationMiddleware(createPostDto), protect, createPost);
+
+router.get("/", getPosts);
+
+router.get("/:identifier/:slug", getPost);
 
 export { router as postRouter };

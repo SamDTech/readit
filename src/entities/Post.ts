@@ -5,8 +5,11 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
+
 import { makeid, slugify } from "../utils/helper";
+import { Comment } from "./Comment";
 import Base from "./Entity";
 import { Sub } from "./Sub";
 import { User } from "./User";
@@ -43,9 +46,14 @@ export class Post extends Base {
   @JoinColumn({ name: "subName", referencedColumnName: "name" })
   sub: Sub;
 
+  @OneToMany(() => Comment, comment => comment.post)
+  comments: Comment[]
+
+
+
   @BeforeInsert()
-  makeIdAndSlug = () => {
-    this.slug = slugify(this.title);
+  makeIdAndSlug() {
     this.identifier = makeid(7);
-  };
+    this.slug = slugify(this.title);
+  }
 }
