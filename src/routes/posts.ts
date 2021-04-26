@@ -6,6 +6,7 @@ import { Sub } from "../entities/Sub";
 import { protect } from "../middlewares/currentUser";
 import validationMiddleware from "../middlewares/validationMiddleware";
 import AppError from "../utils/appError";
+import { Comment } from "../entities/Comment";
 
 const createPost = asyncHandler(
   async (req: Request, res: Response, _: NextFunction) => {
@@ -49,6 +50,25 @@ const getPost = asyncHandler(
   }
 );
 
+const commentsOnPost = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { identifier, slug } = req.params;
+    const { body } = req.body;
+    const user = req.currentUser;
+
+    const post = await Post.findOne({ identifier, slug });
+
+    if (!post) {
+      return next(new AppError(404, "Post not found"));
+    }
+
+    const comment = Comment.create({ body, user, post });
+    await comment.save();
+
+    res.status(201).json(comment);
+  }
+);
+
 const router = Router();
 
 router.post("/", validationMiddleware(createPostDto), protect, createPost);
@@ -56,5 +76,6 @@ router.post("/", validationMiddleware(createPostDto), protect, createPost);
 router.get("/", getPosts);
 
 router.get("/:identifier/:slug", getPost);
+router.post("/:identifier/:slug/comments", protect, commentsOnPost);
 
 export { router as postRouter };
