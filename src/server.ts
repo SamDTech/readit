@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
 import morgan from "morgan";
+import cors from 'cors'
 import cookieParser from "cookie-parser";
 import { authRouter } from "./routes/auth";
 import dotenv from "dotenv";
@@ -15,6 +16,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+app.use(cors())
 
 app.use(cookieParser());
 dotenv.config();

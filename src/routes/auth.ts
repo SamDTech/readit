@@ -20,7 +20,7 @@ const register = asyncHandler(
     const usernameUser = await User.findOne({ username });
 
     if (emailUser || usernameUser) {
-      return next(new AppError(400, "email or password already exist"));
+      return next(new AppError(400, "email or username already exist"));
     }
 
     const user = User.create({ email, password, username });
