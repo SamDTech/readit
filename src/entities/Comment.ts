@@ -5,12 +5,14 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
 import { makeid } from "../utils/helper";
 
 import Base from "./Entity";
 import { Post } from "./Post";
 import { User } from "./User";
+import { Vote } from "./Vote";
 
 @Entity("comments")
 export class Comment extends Base {
@@ -32,6 +34,9 @@ export class Comment extends Base {
 
   @ManyToOne(() => Post, (post) => post.comments, { nullable: false})
   post: Post;
+
+  @OneToMany(() => Vote, vote => vote.comment)
+  vote: Vote[]
 
   @BeforeInsert()
   createIdentifier() {

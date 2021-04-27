@@ -89,7 +89,7 @@ const Home: React.FC<{ posts: Post[] }> = ({ posts }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (
+export const getServerSideProps = async (
   context: DocumentContext
 ) => {
   try {

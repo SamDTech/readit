@@ -14,6 +14,7 @@ import { Comment } from "./Comment";
 import Base from "./Entity";
 import { Sub } from "./Sub";
 import { User } from "./User";
+import { Vote } from "./Vote";
 
 @Entity("posts")
 export class Post extends Base {
@@ -53,12 +54,15 @@ export class Post extends Base {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  protected url: string
+  @OneToMany(() => Vote, (vote) => vote.comment)
+  vote: Vote[];
+
+  protected url: string;
 
   @AfterLoad()
   createFields() {
-    this.url = `/r/${this.subName}/${this.identifier}/${this.slug}}`
-    }
+    this.url = `/r/${this.subName}/${this.identifier}/${this.slug}}`;
+  }
 
   @BeforeInsert()
   makeIdAndSlug() {
