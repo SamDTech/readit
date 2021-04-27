@@ -1,4 +1,5 @@
 import {
+  AfterLoad,
   BeforeInsert,
   Column,
   Entity,
@@ -38,6 +39,9 @@ export class Post extends Base {
   @Column()
   subName: string;
 
+  @Column()
+  username: string;
+
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
@@ -46,10 +50,15 @@ export class Post extends Base {
   @JoinColumn({ name: "subName", referencedColumnName: "name" })
   sub: Sub;
 
-  @OneToMany(() => Comment, comment => comment.post)
-  comments: Comment[]
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 
+  protected url: string
 
+  @AfterLoad()
+  createFields() {
+    this.url = `/r/${this.subName}/${this.identifier}/${this.slug}}`
+    }
 
   @BeforeInsert()
   makeIdAndSlug() {
