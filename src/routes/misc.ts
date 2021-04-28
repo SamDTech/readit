@@ -61,8 +61,11 @@ const vote = asyncHandler(
 
     post = await Post.findOneOrFail(
       { identifier, slug },
-      { relations: ["comments", "votes", "sub"] }
+      { relations: ["comments", 'comments.votes', "votes", "sub"] }
     );
+
+    post.setUserVote(user)
+    post.comments.forEach(comment => comment.setUserVote(user))
 
     return res.status(200).json(post);
   }
