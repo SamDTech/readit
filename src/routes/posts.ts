@@ -12,7 +12,7 @@ const createPost = asyncHandler(
   async (req: Request, res: Response, _: NextFunction) => {
     const { title, body, sub } = req.body;
 
-    const user = req.currentUser;
+    const user = res.locals.user;
 
     // TODO: FIND SUBS
     const subRecord = await Sub.findOneOrFail({ name: sub });
@@ -54,7 +54,7 @@ const commentsOnPost = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { identifier, slug } = req.params;
     const { body } = req.body;
-    const user = req.currentUser;
+    const user = res.locals.user;
 
     const post = await Post.findOne({ identifier, slug });
 

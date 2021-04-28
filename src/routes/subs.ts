@@ -8,12 +8,13 @@ import { protect } from "../middlewares/currentUser";
 import validationMiddleware from "../middlewares/validationMiddleware";
 import AppError from "../utils/appError";
 import { createSubDto } from "../dto/sub.dto";
+import { User } from '../entities/User';
 
 const createSub = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { title, name, description } = req.body;
 
-    const user = req.currentUser;
+    const user: User = res.locals.user;
 
     const sub = await getRepository(Sub)
       .createQueryBuilder("sub")

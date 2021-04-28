@@ -1,3 +1,4 @@
+import { Exclude, Expose } from "class-transformer";
 import {
   AfterLoad,
   BeforeInsert,
@@ -54,15 +55,34 @@ export class Post extends Base {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @OneToMany(() => Vote, (vote) => vote.comment)
-  vote: Vote[];
+  @Exclude()
+  @OneToMany(() => Vote, (vote) => vote.post)
+  votes: Vote[];
+
+  @Expose() get commentCount(): number {
+    return this.comments?.length;
+  }
+
+  @Expose() get voteScore(): number {
+    return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0);
+  }
 
   protected url: string;
+
+  protected userVote: number
+
+  setUserVote(user: User) {
+    const index = this.votes?.findIndex(v => v.username === user.username)
+
+    this.userVote = index > -1 ? this.votes[index].value : 0
+  }
 
   @AfterLoad()
   createFields() {
     this.url = `/r/${this.subName}/${this.identifier}/${this.slug}}`;
   }
+
+
 
   @BeforeInsert()
   makeIdAndSlug() {

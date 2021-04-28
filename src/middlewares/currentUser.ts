@@ -6,20 +6,9 @@ import { NextFunction } from "express";
 import AppError from "../utils/appError";
 import { User } from "../entities/User";
 
-interface UserPayload {
-  username: string;
-}
-
-declare global {
-  namespace Express {
-    interface Request {
-      currentUser?: UserPayload;
-    }
-  }
-}
 
 const protect = asyncHandler(
-  async (req: Request, _: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
      let token: string;
 
     if (
@@ -52,7 +41,7 @@ const protect = asyncHandler(
       );
     }
 
-    req.currentUser = currentUser;
+    res.locals.user = currentUser;
 
     next();
   }

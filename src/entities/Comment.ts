@@ -36,7 +36,7 @@ export class Comment extends Base {
   post: Post;
 
   @OneToMany(() => Vote, vote => vote.comment)
-  vote: Vote[]
+  votes: Vote[]
 
   @BeforeInsert()
   createIdentifier() {

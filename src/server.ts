@@ -10,6 +10,7 @@ import trim from "./middlewares/trim";
 import errorMiddleware from "./middlewares/errorHandler";
 import { postRouter } from "./routes/posts";
 import { subRouter } from "./routes/subs";
+import { miscRouter } from "./routes/misc";
 
 const app = express();
 dotenv.config();
@@ -32,6 +33,7 @@ app.get("/", (_, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/subs", subRouter);
+app.use('/api/misc', miscRouter)
 
 // global Error Handler
 app.use(errorMiddleware);

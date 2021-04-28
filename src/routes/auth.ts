@@ -54,8 +54,8 @@ const login = asyncHandler(
 );
 
 const me = asyncHandler(
-  async (req: Request, res: Response, _: NextFunction) => {
-    res.status(200).json(req.currentUser);
+  async (_: Request, res: Response) => {
+    res.status(200).json(res.locals.user);
   }
 );
 
