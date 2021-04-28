@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Nav from "../components/Nav";
 import { useRouter } from "next/router";
+import '../styles/icons.css'
 
 axios.defaults.baseURL = "http://localhost:4000/api";
 axios.defaults.withCredentials = true;
