@@ -52,6 +52,7 @@ export class Post extends Base {
   @JoinColumn({ name: "subName", referencedColumnName: "name" })
   sub: Sub;
 
+  @Exclude()
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
@@ -69,20 +70,18 @@ export class Post extends Base {
 
   protected url: string;
 
-  protected userVote: number
+  protected userVote: number;
 
   setUserVote(user: User) {
-    const index = this.votes?.findIndex(v => v.username === user.username)
+    const index = this.votes?.findIndex((v) => v.username === user.username);
 
-    this.userVote = index > -1 ? this.votes[index].value : 0
+    this.userVote = index > -1 ? this.votes[index].value : 0;
   }
 
   @AfterLoad()
   createFields() {
     this.url = `/r/${this.subName}/${this.identifier}/${this.slug}}`;
   }
-
-
 
   @BeforeInsert()
   makeIdAndSlug() {

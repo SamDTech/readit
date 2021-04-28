@@ -28,6 +28,7 @@ const createPost = asyncHandler(
 const getPosts = asyncHandler(async (_: Request, res: Response) => {
   const posts = await Post.find({
     order: { createdAt: "DESC" },
+    relations: ['comments', 'votes', 'sub']
   });
 
   res.status(200).json(posts);
