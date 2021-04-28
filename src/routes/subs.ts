@@ -9,6 +9,7 @@ import validationMiddleware from "../middlewares/validationMiddleware";
 import AppError from "../utils/appError";
 import { createSubDto } from "../dto/sub.dto";
 import { User } from '../entities/User';
+import { user } from "../middlewares/user";
 
 const createSub = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -35,6 +36,6 @@ const createSub = asyncHandler(
 
 const router = Router();
 
-router.post("/", validationMiddleware(createSubDto), protect, createSub);
+router.post("/", validationMiddleware(createSubDto),user, protect, createSub);
 
 export { router as subRouter };

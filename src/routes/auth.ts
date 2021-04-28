@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 import LoginUserDto from "../dto/login.dto";
 import createSendToken from "../utils/generateToken";
 import { protect } from "../middlewares/currentUser";
+import { user } from "../middlewares/user";
 
 const router = Router();
 
@@ -53,11 +54,9 @@ const login = asyncHandler(
   }
 );
 
-const me = asyncHandler(
-  async (_: Request, res: Response) => {
-    res.status(200).json(res.locals.user);
-  }
-);
+const me = asyncHandler(async (_: Request, res: Response) => {
+  res.status(200).json(res.locals.user);
+});
 
 const logout = asyncHandler(async (_: Request, res: Response) => {
   res.cookie("token", "loggedOut", {
@@ -71,6 +70,6 @@ const logout = asyncHandler(async (_: Request, res: Response) => {
 
 router.post("/register", validationMiddleware(CreateUserDto), register);
 router.post("/login", validationMiddleware(LoginUserDto), login);
-router.get("/me", protect, me);
-router.get("/logout", protect, logout);
+router.get("/me", user, protect, me);
+router.get("/logout", user, protect, logout);
 export { router as authRouter };

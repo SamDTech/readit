@@ -7,6 +7,7 @@ import { protect } from "../middlewares/currentUser";
 import validationMiddleware from "../middlewares/validationMiddleware";
 import AppError from "../utils/appError";
 import { Comment } from "../entities/Comment";
+import { user } from "../middlewares/user";
 
 const createPost = asyncHandler(
   async (req: Request, res: Response, _: NextFunction) => {
@@ -30,6 +31,10 @@ const getPosts = asyncHandler(async (_: Request, res: Response) => {
     order: { createdAt: "DESC" },
     relations: ['comments', 'votes', 'sub']
   });
+
+  if (res.locals.user) {
+    posts.forEach(p => p.setUserVote(res.locals.user))
+  }
 
   res.status(200).json(posts);
 });
@@ -72,11 +77,11 @@ const commentsOnPost = asyncHandler(
 
 const router = Router();
 
-router.post("/", validationMiddleware(createPostDto), protect, createPost);
+router.post("/", validationMiddleware(createPostDto), user, protect, createPost);
 
-router.get("/", getPosts);
+router.get("/", user, getPosts);
 
 router.get("/:identifier/:slug", getPost);
-router.post("/:identifier/:slug/comments", protect, commentsOnPost);
+router.post("/:identifier/:slug/comments",user, protect, commentsOnPost);
 
 export { router as postRouter };

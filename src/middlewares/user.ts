@@ -3,10 +3,9 @@ import asyncHandler from "express-async-handler";
 import { Request } from "express";
 import { Response } from "express";
 import { NextFunction } from "express";
-import AppError from "../utils/appError";
 import { User } from "../entities/User";
 
-const protect = asyncHandler(
+const user = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     let token: string;
 
@@ -27,7 +26,7 @@ const protect = asyncHandler(
 
     const currentUser = await User.findOne({ username: decoded.username });
 
-   
+
 
     res.locals.user = currentUser;
 
@@ -35,4 +34,4 @@ const protect = asyncHandler(
   }
 );
 
-export { protect };
+export { user };

@@ -10,6 +10,7 @@ import AppError from "../utils/appError";
 import { Vote } from "../entities/Vote";
 import { Comment } from "../entities/Comment";
 import { User } from "../entities/User";
+import { user } from "../middlewares/user";
 
 const vote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -73,6 +74,6 @@ const vote = asyncHandler(
 
 const router = Router();
 
-router.post("/vote", validationMiddleware(createVoteDto), protect, vote);
+router.post("/vote", validationMiddleware(createVoteDto),user, protect, vote);
 
 export { router as miscRouter };
