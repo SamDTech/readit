@@ -29,12 +29,12 @@ const createPost = asyncHandler(
 const getPosts = asyncHandler(async (_: Request, res: Response) => {
   const posts = await Post.find({
     order: { createdAt: "DESC" },
-    relations: ['comments', 'votes', 'sub']
+    relations: ["comments", "votes", "sub"],
   });
 
-  if (res.locals.user) {
-    posts.forEach(p => p.setUserVote(res.locals.user))
-  }
+  console.log(res.locals.user)
+
+  if (res.locals.user) posts.forEach((p) => p.setUserVote(res.locals.user));
 
   res.status(200).json(posts);
 });
@@ -77,11 +77,17 @@ const commentsOnPost = asyncHandler(
 
 const router = Router();
 
-router.post("/", validationMiddleware(createPostDto), user, protect, createPost);
+router.post(
+  "/",
+  validationMiddleware(createPostDto),
+  user,
+  protect,
+  createPost
+);
 
 router.get("/", user, getPosts);
 
 router.get("/:identifier/:slug", getPost);
-router.post("/:identifier/:slug/comments",user, protect, commentsOnPost);
+router.post("/:identifier/:slug/comments", user, protect, commentsOnPost);
 
 export { router as postRouter };

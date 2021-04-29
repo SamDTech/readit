@@ -1,11 +1,10 @@
 import Head from "next/head";
-import axios from "axios";
-import Link from "next/link";
 import { Post } from "../types";
 
 
 import { DocumentContext } from "next/document";
 import PostCard from "../components/PostCard";
+import app from "../axiosConfig";
 
 
 
@@ -33,7 +32,11 @@ export const getServerSideProps = async (
   context: DocumentContext
 ) => {
   try {
-    const { data } = await axios.get(`/posts`);
+    const { data } = await app.get(`/posts`, {
+      headers: context?.req?.headers?.cookie
+        ? { cookie: context.req.headers.cookie }
+        : undefined,
+    });
 
     if (!data) {
       return {

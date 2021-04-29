@@ -1,11 +1,10 @@
 import { FormEvent, useEffect, useState } from "react";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import axios from "axios";
 import { toast } from "react-toastify";
 import InputGroup from "../components/InputGroup";
+import app from "../axiosConfig";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -17,7 +16,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await axios.post("/auth/login", {
+      await app.post("/auth/login", {
         password,
         username,
       }, {withCredentials:true});

@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Post } from "../types";
 import axios from "axios";
+import { classnames } from "tailwindcss-classnames";
 
 dayjs.extend(relativeTime);
 
@@ -25,18 +26,20 @@ const PostCard: React.FC<{ post: Post }> = ({
     body,
     username,
     createdAt,
+    userVote,
     slug,
-    url
+    url,
   },
 }) => {
   const vote = async (value: number) => {
     try {
-      const { data } = await axios.post('/misc/vote', {
+      const { data } = await axios.post("/misc/vote", {
         identifier,
         slug,
-        value
-      })
-      console.log(data)
+        value,
+      });
+      console.log(data);
+      console.log(voteScore);
     } catch (error) {}
   };
 
@@ -45,14 +48,26 @@ const PostCard: React.FC<{ post: Post }> = ({
       {/* Vote section */}
       <div className="w-10 py-3 text-center bg-gray-200 rounded-l">
         {/* upvote */}
-        <div onClick={()=> vote(1)} className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500">
-          <i className="icon-arrow-up"></i>
+        <div
+          onClick={() => vote(1)}
+          className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500"
+        >
+          <i
+            className={`icon-arrow-up ${userVote === 1 && "text-red-500"}`}
+          ></i>
         </div>
         <p className="text-xs font-bold">{voteScore}</p>
         {/* down vote */}
 
-        <div onClick={()=> vote(-1)} className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600">
-          <i className="icon-arrow-down"></i>
+        <div
+          onClick={() => vote(-1)}
+          className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600"
+        >
+          <i
+            className={`icon-arrow-down ${
+              userVote === -1 && "text-blue-600"
+            }`}
+          ></i>
         </div>
       </div>
       {/* Post data section */}
