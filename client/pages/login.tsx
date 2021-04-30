@@ -5,7 +5,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import InputGroup from "../components/InputGroup";
 import app from "../axiosConfig";
-import { useAuthDispatch } from "../context/authContext";
+import { useAuthDispatch, useAuthState } from "../context/authContext";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -13,6 +13,12 @@ export default function Register() {
 
   const router = useRouter();
   const dispatch = useAuthDispatch();
+
+  const { authenticated } = useAuthState()
+
+  if (authenticated) {
+    router.push('/')
+  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -27,7 +33,7 @@ export default function Register() {
         { withCredentials: true }
       );
 
-      dispatch({ type: "LOGIN", payload: data });
+      dispatch("LOGIN", data);
 
       setPassword("");
       setUsername("");

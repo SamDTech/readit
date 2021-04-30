@@ -6,6 +6,7 @@ import Link from "next/link";
 import axios from "axios";
 import { toast } from "react-toastify";
 import InputGroup from "../components/InputGroup";
+import { useAuthState } from "../context/authContext";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -13,7 +14,14 @@ export default function Register() {
   const [agreement, setAgreement] = useState(false);
   const [password, setPassword] = useState("");
 
+    const { authenticated } = useAuthState();
+
   const router = useRouter();
+
+   if (authenticated) {
+     router.push("/");
+   }
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

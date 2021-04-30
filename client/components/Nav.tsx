@@ -5,13 +5,13 @@ import { useAuthDispatch, useAuthState } from "../context/authContext";
 import axios from "axios";
 
 const Nav = () => {
-  const { authenticated } = useAuthState();
+  const { authenticated, loading } = useAuthState();
   const dispatch = useAuthDispatch();
 
   const logout = async () => {
     try {
       await axios.get("/auth/logout");
-      dispatch({ type: "LOGOUT" });
+      dispatch("LOGOUT");
       window.location.reload();
     } catch (error) {
       console.log(error);
@@ -46,7 +46,7 @@ const Nav = () => {
 
       {/* Auth buttons */}
       <div className="flex">
-        {authenticated ? (
+        { !loading && (authenticated ? (
           // show logout
           <button
             className="w-32 py-1 mr-4 leading-5 hollow blue button"
@@ -66,7 +66,7 @@ const Nav = () => {
               <a className="w-32 py-1 blue button">Sign up</a>
             </Link>
           </>
-        )}
+        ))}
       </div>
     </div>
   );
