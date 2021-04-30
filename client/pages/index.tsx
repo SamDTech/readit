@@ -1,13 +1,9 @@
 import Head from "next/head";
 import { Post } from "../types";
 
-
 import { DocumentContext } from "next/document";
 import PostCard from "../components/PostCard";
 import app from "../axiosConfig";
-
-
-
 
 const Home: React.FC<{ posts: Post[] }> = ({ posts }) => {
   return (
@@ -19,18 +15,14 @@ const Home: React.FC<{ posts: Post[] }> = ({ posts }) => {
         {/* Post feeds */}
         <div className="w-160">
           {posts &&
-            posts.map((post) => (
-              <PostCard post={post} key={post.identifier} />
-            ))}
+            posts.map((post) => <PostCard post={post} key={post.identifier} />)}
         </div>
       </div>
     </div>
   );
 };
 
-export const getServerSideProps = async (
-  context: DocumentContext
-) => {
+export const getServerSideProps = async (context: DocumentContext) => {
   try {
     const { data } = await app.get(`/posts`, {
       headers: context?.req?.headers?.cookie
