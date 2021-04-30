@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Nav from "../components/Nav";
 import { useRouter } from "next/router";
 import "../styles/icons.css";
+import { AuthProvider } from "../context/authContext";
 
 axios.defaults.baseURL = "http://localhost:4000/api";
 axios.defaults.withCredentials = true;
@@ -17,11 +18,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const authRoute = authRoutes.includes(pathname);
 
   return (
-    <div>
+    <AuthProvider>
       <ToastContainer />
       {!authRoute && <Nav />}
       <Component {...pageProps} />
-    </div>
+    </AuthProvider>
   );
 }
 

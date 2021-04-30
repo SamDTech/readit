@@ -1,8 +1,23 @@
 import React from "react";
 import Link from "next/link";
 import Readit from "../images/logo.svg";
+import { useAuthDispatch, useAuthState } from "../context/authContext";
+import axios from "axios";
 
 const Nav = () => {
+  const { authenticated } = useAuthState();
+  const dispatch = useAuthDispatch();
+
+  const logout = async () => {
+    try {
+      await axios.get("/auth/logout");
+      dispatch({ type: "LOGOUT" });
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="fixed inset-x-0 top-0 z-10 flex items-center justify-center h-12 px-5 bg-white">
       {/* LOGO & TITLE */}
@@ -31,13 +46,27 @@ const Nav = () => {
 
       {/* Auth buttons */}
       <div className="flex">
-        <Link href="/login">
-          <a className="w-32 py-1 mr-4 leading-5 hollow blue button">Login</a>
-        </Link>
+        {authenticated ? (
+          // show logout
+          <button
+            className="w-32 py-1 mr-4 leading-5 hollow blue button"
+            onClick={logout}
+          >
+            Logout
+          </button>
+        ) : (
+          <>
+            <Link href="/login">
+              <a className="w-32 py-1 mr-4 leading-5 hollow blue button">
+                Login
+              </a>
+            </Link>
 
-        <Link href="/register">
-          <a className="w-32 py-1 blue button">Sign up</a>
-        </Link>
+            <Link href="/register">
+              <a className="w-32 py-1 blue button">Sign up</a>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

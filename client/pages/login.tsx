@@ -5,29 +5,37 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import InputGroup from "../components/InputGroup";
 import app from "../axiosConfig";
+import { useAuthDispatch } from "../context/authContext";
 
 export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const router = useRouter();
+  const dispatch = useAuthDispatch();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
-      await app.post("/auth/login", {
-        password,
-        username,
-      }, {withCredentials:true});
+      const { data } = await app.post(
+        "/auth/login",
+        {
+          password,
+          username,
+        },
+        { withCredentials: true }
+      );
+
+      dispatch({ type: "LOGIN", payload: data });
 
       setPassword("");
       setUsername("");
 
       router.push("/");
     } catch (error) {
-      console.log(error)
-       toast.error(error.response.data.message);
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -35,7 +43,6 @@ export default function Register() {
     <div className="flex bg-white">
       <Head>
         <title>Login</title>
-
       </Head>
 
       <div
