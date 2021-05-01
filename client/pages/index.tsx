@@ -4,6 +4,8 @@ import { Post } from "../types";
 import { DocumentContext } from "next/document";
 import PostCard from "../components/PostCard";
 import app from "../axiosConfig";
+import useSWR from 'swr'
+import { SWRConfig } from 'swr';
 
 const Home: React.FC<{ posts: Post[] }> = ({ posts }) => {
   return (

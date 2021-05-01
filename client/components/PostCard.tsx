@@ -64,9 +64,7 @@ const PostCard: React.FC<{ post: Post }> = ({
           className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600"
         >
           <i
-            className={`icon-arrow-down ${
-              userVote === -1 && "text-blue-600"
-            }`}
+            className={`icon-arrow-down ${userVote === -1 && "text-blue-600"}`}
           ></i>
         </div>
       </div>
@@ -74,17 +72,18 @@ const PostCard: React.FC<{ post: Post }> = ({
       <div className="w-full p-2">
         <div className="flex items-center">
           <Link href={`/r/${subName}`}>
-            <>
-              <img
-                src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                alt="default"
-                className="w-6 h-6 mr-1 rounded-full cursor-pointer"
-              />
-              <a className="text-xs font-bold cursor-pointer hover:underline">
-                /r/${subName}
-              </a>
-            </>
+            <img
+              src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+              alt="default"
+              className="w-6 h-6 mr-1 rounded-full cursor-pointer"
+            />
           </Link>
+          <Link href={`/r/${subName}`}>
+            <a className="text-xs font-bold cursor-pointer hover:underline">
+              /r/${subName}
+            </a>
+          </Link>
+
           <p className="text-xs text-gray-500">
             {" "}
             <span className="mx-1">•</span> Posted by

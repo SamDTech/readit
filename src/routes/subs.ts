@@ -8,8 +8,9 @@ import { protect } from "../middlewares/currentUser";
 import validationMiddleware from "../middlewares/validationMiddleware";
 import AppError from "../utils/appError";
 import { createSubDto } from "../dto/sub.dto";
-import { User } from '../entities/User';
+import { User } from "../entities/User";
 import { user } from "../middlewares/user";
+import { Post } from "../entities/Post";
 
 const createSub = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -34,8 +35,30 @@ const createSub = asyncHandler(
   }
 );
 
+const getSub = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { name } = req.params;
+
+    const sub = await Sub.findOne({ name });
+
+    if (!sub) {
+      return next(new AppError(404, "sub not found"));
+    }
+
+    const posts = await Post.find({
+      where: { sub },
+      relations: ["comments", "votes"],
+    });
+
+    sub.posts = posts;
+
+    res.status(200).json(sub);
+  }
+);
+
 const router = Router();
 
-router.post("/", validationMiddleware(createSubDto),user, protect, createSub);
+router.post("/", validationMiddleware(createSubDto), user, protect, createSub);
+router.get("/:name", user, getSub);
 
 export { router as subRouter };

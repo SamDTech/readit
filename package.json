@@ -32,13 +32,15 @@
     "pg": "^8.4.0",
     "reflect-metadata": "^0.1.10",
     "shortid": "^2.2.16",
-    "typeorm": "0.2.32"
+    "typeorm": "0.2.32",
+    "typeorm-seeding": "^1.6.1"
   },
   "scripts": {
     "start": "ts-node src/server.ts",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js",
     "client": "cd client && npm run dev",
     "server": "nodemon --exec ts-node src/server.ts",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\" -n server,client",
+    "seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
   }
 }
