@@ -22,7 +22,6 @@ export default function Register() {
      router.push("/");
    }
 
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
