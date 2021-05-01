@@ -12,6 +12,16 @@ import { AuthProvider } from "../context/authContext";
 axios.defaults.baseURL = "http://localhost:4000/api";
 axios.defaults.withCredentials = true;
 
+const fetcher = async (url: string) => {
+  try {
+    const { data } = await axios.get(url)
+
+    return data
+  } catch (error) {
+    throw error.response.data
+  }
+}
+
 function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
 
@@ -21,13 +31,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SWRConfig
       value={{
-        fetcher: (url) => axios.get(url).then((res) => res.data),
+        fetcher
       }}
     >
       <AuthProvider>
         <ToastContainer />
         {!authRoute && <Nav />}
-        <Component {...pageProps} />
+        <div className={authRoute ? '' : 'pt-12'}>
+          <Component {...pageProps} />
+        </div>
       </AuthProvider>
     </SWRConfig>
   );

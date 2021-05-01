@@ -51,6 +51,10 @@ const getSub = asyncHandler(
       relations: ["comments", "votes"],
     });
 
+    if (!posts) {
+        return next(new AppError(404, "posts not available yet"));
+    }
+
     sub.posts = posts;
 
     if (res.locals.user) {

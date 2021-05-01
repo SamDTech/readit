@@ -9,7 +9,7 @@ import { SWRConfig } from 'swr';
 
 const Home: React.FC<{ posts: Post[] }> = ({ posts }) => {
   return (
-    <div className="pt-12 ">
+    <>
       <Head>
         <title>Readit: The front page of the internet</title>
       </Head>
@@ -20,7 +20,7 @@ const Home: React.FC<{ posts: Post[] }> = ({ posts }) => {
             posts.map((post) => <PostCard post={post} key={post.identifier} />)}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
