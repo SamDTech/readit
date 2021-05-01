@@ -1,4 +1,5 @@
 import { Response, Router, Request, NextFunction } from "express";
+import fs from "fs";
 import asyncHandler from "express-async-handler";
 import { getRepository } from "typeorm";
 import multer from "multer";
@@ -82,7 +83,7 @@ const ownSub = asyncHandler(
 
     res.locals.sub = sub;
 
-    next()
+    next();
   }
 );
 
@@ -105,9 +106,36 @@ const upload = multer({
   fileFilter,
 });
 
-const uploadSubImage = asyncHandler(async (_: Request, res: Response) => {
-  res.json({ success: true });
-});
+const uploadSubImage = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const sub: Sub = res.locals.sub;
+
+    const type = req.body.type;
+
+    if (type !== "image" && type !== "banner") {
+      fs.unlinkSync(req.file.path);
+      return next(new AppError(400, "Invalid type"));
+    }
+
+    let oldImageUrn: string = "";
+
+    if (type === "image") {
+      oldImageUrn = sub.imageUrn || "";
+      sub.imageUrn = req.file.filename;
+    } else if (type === "banner") {
+      oldImageUrn = sub.bannerUrn || "";
+      sub.bannerUrn = req.file.filename;
+    }
+
+    await sub.save();
+
+    if (oldImageUrn !== "") {
+      fs.unlinkSync(`public/images/${oldImageUrn}`);
+    }
+
+    res.json(sub);
+  }
+);
 
 const router = Router();
 
