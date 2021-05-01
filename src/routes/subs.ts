@@ -66,6 +66,26 @@ const getSub = asyncHandler(
   }
 );
 
+const ownSub = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user: User = res.locals.user;
+
+    const sub = await Sub.findOne({ where: { name: req.params.name } });
+
+    if (!sub) {
+      return next(new AppError(404, "Sub not found"));
+    }
+
+    if (sub.username !== user.username) {
+      return next(new AppError(403, "You don't own this sub"));
+    }
+
+    res.locals.sub = sub;
+
+    next()
+  }
+);
+
 const storage = multer.diskStorage({
   destination: "public/images",
   filename: function (_, file, cb) {
@@ -77,7 +97,7 @@ const storage = multer.diskStorage({
 function fileFilter(_: Request, file: any, cb: multer.FileFilterCallback) {
   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png")
     cb(null, true);
-  else cb(new Error('Not an Image file'));
+  else cb(new Error("Not an Image file"));
 }
 
 const upload = multer({
@@ -98,6 +118,7 @@ router.post(
   "/:name/image",
   user,
   protect,
+  ownSub,
   upload.single("file"),
   uploadSubImage
 );
