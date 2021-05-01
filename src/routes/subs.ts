@@ -47,10 +47,15 @@ const getSub = asyncHandler(
 
     const posts = await Post.find({
       where: { sub },
+      order: { createdAt: "DESC" },
       relations: ["comments", "votes"],
     });
 
     sub.posts = posts;
+
+    if (res.locals.user) {
+      sub.posts.forEach((post) => post.setUserVote(res.locals.user));
+    }
 
     res.status(200).json(sub);
   }
