@@ -1,3 +1,4 @@
+import { Expose } from "class-transformer";
 import {
   Column,
   Entity,
@@ -36,7 +37,7 @@ export class Sub extends Base {
   bannerUrn: string;
 
   @Column()
-  username: string
+  username: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
@@ -44,4 +45,18 @@ export class Sub extends Base {
 
   @OneToMany(() => Post, (post) => post.sub)
   posts: Post[];
+
+  @Expose()
+  get imageUrl(): string {
+    return this.imageUrn
+      ? `${process.env.APP_URL}/images/${this.imageUrn}`
+      : "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+  }
+
+  @Expose()
+  get bannerUrl(): string | undefined {
+    return this.bannerUrn
+      ? `${process.env.APP_URL}/images/${this.bannerUrn}`
+      : undefined;
+  }
 }

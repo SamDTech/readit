@@ -15,10 +15,25 @@ export interface Post {
   userVote?: number;
 }
 
-
-export interface User{
+export interface User {
   username: string;
   email: string;
   createdAt: string;
-  updatedAt: string
+  updatedAt: string;
+}
+
+export interface Sub {
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  title: string;
+  description: string;
+  imageUrn: string;
+  bannerUrn: null;
+  username: string;
+  posts: Post[];
+
+  // virtuals
+  imageUrl: string;
+  bannerUrl: string;
 }
