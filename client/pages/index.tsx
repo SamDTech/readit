@@ -2,14 +2,13 @@ import Head from "next/head";
 import { Post, Sub } from "../types";
 import { DocumentContext } from "next/document";
 import PostCard from "../components/PostCard";
-import app from "../axiosConfig";
 import useSWR from "swr";
 import Image from "next/image";
 import Link from "next/link";
 
 const Home: React.FC<{ posts: Post[] }> = () => {
   const { data: topSubs } = useSWR("/misc/top-subs");
-    const { data: posts } = useSWR("/posts");
+    const { data: posts } = useSWR<Post[]>("/posts");
   return (
     <>
       <Head>
