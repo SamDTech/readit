@@ -14,11 +14,9 @@ export default function Register() {
   const router = useRouter();
   const dispatch = useAuthDispatch();
 
-  const { authenticated } = useAuthState()
+  const { authenticated } = useAuthState();
 
-  if (authenticated) {
-    router.push('/')
-  }
+  // if (authenticated) router.push("/")
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -38,7 +36,7 @@ export default function Register() {
       setPassword("");
       setUsername("");
 
-      router.push("/");
+      router.back();
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);

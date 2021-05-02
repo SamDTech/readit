@@ -8,6 +8,7 @@ import { Sub } from "../../types";
 import { useAuthState } from "../../context/authContext";
 import classNames from "classnames";
 import axios from "axios";
+import Sidebar from "../../components/Sidebar";
 
 const SubName = () => {
   const [ownSub, setOwnSub] = useState(false);
@@ -138,7 +139,8 @@ const SubName = () => {
 
           {/* Post and Sidebar */}
           <div className="container flex pt-5">
-            <div className="w-160">{postMarkup}</div>
+                      <div className="w-160">{postMarkup}</div>
+                      <Sidebar sub={ sub}/>
           </div>
         </>
       )}

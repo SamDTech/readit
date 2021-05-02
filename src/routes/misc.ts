@@ -11,6 +11,8 @@ import { Vote } from "../entities/Vote";
 import { Comment } from "../entities/Comment";
 import { User } from "../entities/User";
 import { user } from "../middlewares/user";
+import { getConnection } from "typeorm";
+import { Sub } from "../entities/Sub";
 
 const vote = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -62,18 +64,38 @@ const vote = asyncHandler(
 
     post = await Post.findOneOrFail(
       { identifier, slug },
-      { relations: ["comments", 'comments.votes', "votes", "sub"] }
+      { relations: ["comments", "comments.votes", "votes", "sub"] }
     );
 
-    post.setUserVote(user)
-    post.comments.forEach(comment => comment.setUserVote(user))
+    post.setUserVote(user);
+    post.comments.forEach((comment) => comment.setUserVote(user));
 
     return res.status(200).json(post);
   }
 );
 
+const topSubs = asyncHandler(async (_: Request, res: Response) => {
+  const imageUrlExp = `COALESCE('${process.env.APP_URL}/images/' || s."imageUrn" , 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y')`;
+
+  const subs = await getConnection()
+    .createQueryBuilder()
+    .select(
+      `s.title, s.name, ${imageUrlExp}  as "imageUrl", count(p.id) as "postCount" `
+    )
+    .from(Sub, "s")
+    .leftJoin(Post, "p", `s.name = p."subName"`)
+    .groupBy('s.title, s.name, "imageUrl"')
+    .orderBy(`"postCount"`, "DESC")
+    .limit(5)
+    .execute();
+
+  res.status(200).json(subs);
+});
+
 const router = Router();
 
-router.post("/vote", validationMiddleware(createVoteDto),user, protect, vote);
+router.post("/vote", validationMiddleware(createVoteDto), user, protect, vote);
+
+router.get("/top-subs", topSubs);
 
 export { router as miscRouter };
