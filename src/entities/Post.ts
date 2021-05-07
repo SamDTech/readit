@@ -80,7 +80,7 @@ export class Post extends Base {
 
   @AfterLoad()
   createFields() {
-    this.url = `/r/${this.subName}/${this.identifier}/${this.slug}}`;
+    this.url = `/r/${this.subName}/${this.identifier}/${this.slug}`;
   }
 
   @BeforeInsert()

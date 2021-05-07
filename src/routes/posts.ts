@@ -43,9 +43,13 @@ const getPost = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { identifier, slug } = req.params;
 
+    console.log('IDENTIFIER', identifier)
+
+    console.log("SLUG", slug);
+
     const post = await Post.findOne(
-      { identifier, slug },
-      { relations: ["sub", "votes"] }
+      {slug, identifier},
+      { relations: ["sub", "votes", "comments"] }
     );
 
     if (!post) {

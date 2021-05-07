@@ -5,16 +5,11 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Post } from "../types";
 import axios from "axios";
 import { classnames } from "tailwindcss-classnames";
+import ActionButton from "./ActionButton";
 
 dayjs.extend(relativeTime);
 
-const ActionButton = ({ children }) => {
-  return (
-    <div className="px-1 py-1 mr-2 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
-      {children}
-    </div>
-  );
-};
+
 
 const PostCard: React.FC<{ post: Post }> = ({
   post: {
@@ -104,6 +99,8 @@ const PostCard: React.FC<{ post: Post }> = ({
           <a className="my-1 text-lg font-medium">{title}</a>
         </Link>
         {body && <p className="my-1 text-sm">{body}</p>}
+
+        {/* Action Buttons */}
         <div className="flex">
           <Link href={url}>
             <a href="">
