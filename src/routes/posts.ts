@@ -32,7 +32,7 @@ const getPosts = asyncHandler(async (_: Request, res: Response) => {
     relations: ["comments", "votes", "sub"],
   });
 
-  console.log(res.locals.user)
+  console.log(res.locals.user);
 
   if (res.locals.user) posts.forEach((p) => p.setUserVote(res.locals.user));
 
@@ -45,11 +45,15 @@ const getPost = asyncHandler(
 
     const post = await Post.findOne(
       { identifier, slug },
-      { relations: ["sub"] }
+      { relations: ["sub", "votes"] }
     );
 
     if (!post) {
       return next(new AppError(404, "Post not found"));
+    }
+
+    if (res.locals.user) {
+      post.setUserVote(res.locals.user);
     }
 
     res.status(200).json(post);
@@ -69,6 +73,7 @@ const commentsOnPost = asyncHandler(
     }
 
     const comment = Comment.create({ body, user, post });
+
     await comment.save();
 
     res.status(201).json(comment);
@@ -87,7 +92,7 @@ router.post(
 
 router.get("/", user, getPosts);
 
-router.get("/:identifier/:slug", getPost);
+router.get("/:identifier/:slug", user, getPost);
 router.post("/:identifier/:slug/comments", user, protect, commentsOnPost);
 
 export { router as postRouter };
