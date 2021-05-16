@@ -43,6 +43,7 @@ export interface Sub {
 export interface Comment {
   identifier: string;
   body: string;
+  username: string;
   createdAt: string;
   updatedAt: string;
 

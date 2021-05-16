@@ -29,6 +29,9 @@ export class Comment extends Base {
   @Column()
   body: string;
 
+  @Column()
+  username: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
@@ -45,7 +48,7 @@ export class Comment extends Base {
   }
 
   protected userVote: number;
-  
+
   setUserVote(user: User) {
     const index = this.votes?.findIndex((v) => v.username === user.username);
 
