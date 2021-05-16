@@ -43,12 +43,12 @@ const getPost = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { identifier, slug } = req.params;
 
-    console.log('IDENTIFIER', identifier)
+    console.log("IDENTIFIER", identifier);
 
     console.log("SLUG", slug);
 
     const post = await Post.findOne(
-      {slug, identifier},
+      { slug, identifier },
       { relations: ["sub", "votes", "comments"] }
     );
 
@@ -84,6 +84,30 @@ const commentsOnPost = asyncHandler(
   }
 );
 
+const getPostComments = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { identifier, slug } = req.params;
+
+    const post = await Post.findOne({ identifier, slug });
+
+    if (!post) {
+      return next(new AppError(404, "Post not Found"));
+    }
+
+    const comments = await Comment.find({
+      where: { post },
+      order: { createdAt: "DESC" },
+      relations: ["votes"],
+    });
+
+    if (res.locals.user) {
+      comments.forEach((comment) => comment.setUserVote(res.locals.user));
+    }
+
+    res.status(200).json(comments);
+  }
+);
+
 const router = Router();
 
 router.post(
@@ -97,6 +121,7 @@ router.post(
 router.get("/", user, getPosts);
 
 router.get("/:identifier/:slug", user, getPost);
+router.get("/:identifier/:slug/comments", user, getPostComments);
 router.post("/:identifier/:slug/comments", user, protect, commentsOnPost);
 
 export { router as postRouter };
