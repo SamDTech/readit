@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 import Sidebar from "../../../../components/Sidebar";
-import { Post } from "../../../../types";
+import { Post, Comment } from "../../../../types";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -23,6 +23,10 @@ const PostPage = () => {
   const { data: post, error } = useSWR<Post>(
     identifier && slug ? `/posts/${identifier}/${slug}` : null
   );
+
+   const { data: comments } = useSWR<Comment[]>(
+     identifier && slug ? `/posts/${identifier}/${slug}/comments` : null
+   );
 
   if (error) router.push("/");
 
