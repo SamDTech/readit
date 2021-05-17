@@ -11,6 +11,7 @@ import errorMiddleware from "./middlewares/errorHandler";
 import { postRouter } from "./routes/posts";
 import { subRouter } from "./routes/subs";
 import { miscRouter } from "./routes/misc";
+import { userRouter } from "./routes/users";
 
 const app = express();
 dotenv.config();
@@ -18,8 +19,14 @@ dotenv.config();
 // Middlewares
 app.use(express.json());
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
-app.use(cors({ credentials: true, origin: process.env.ORIGIN, optionsSuccessStatus: 200 }));
-app.use(express.static('public'))
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.ORIGIN,
+    optionsSuccessStatus: 200,
+  })
+);
+app.use(express.static("public"));
 app.use(cookieParser());
 
 app.use(trim);
@@ -33,7 +40,8 @@ app.get("/", (_, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/subs", subRouter);
-app.use('/api/misc', miscRouter)
+app.use("/api/misc", miscRouter);
+app.use("/api/users", userRouter);
 
 // global Error Handler
 app.use(errorMiddleware);
