@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const Home: React.FC<{ posts: Post[] }> = () => {
   const { data: topSubs } = useSWR("/misc/top-subs");
-    const { data: posts } = useSWR<Post[]>("/posts");
+  const { data: posts } = useSWR<Post[]>("/posts");
   return (
     <>
       <Head>
@@ -35,18 +35,18 @@ const Home: React.FC<{ posts: Post[] }> = () => {
                   key={sub.name}
                   className="flex items-center px-4 py-2 text-xs border-b"
                 >
-                  <div className="mr-2 overflow-hidden rounded-full cursor-pointer">
-                    <Link href={`/r/${sub.name}`}>
-                      <Image
-                        height={(6 * 16) / 4}
-                        width={(6 * 16) / 4}
-                        src={sub.imageUrl}
-                        alt="Sub"
-                      />
-                    </Link>
-                  </div>
                   <Link href={`/r/${sub.name}`}>
-                    <a className="font-bold hover:cursor-pointer">
+                    <Image
+                      className="rounded-full cursor-pointer "
+                      height={(6 * 16) / 4}
+                      width={(6 * 16) / 4}
+                      src={sub.imageUrl}
+                      alt="Sub"
+                    />
+                  </Link>
+
+                  <Link href={`/r/${sub.name}`}>
+                    <a className="ml-2 font-bold hover:cursor-pointer">
                       /r/${sub.name}
                     </a>
                   </Link>

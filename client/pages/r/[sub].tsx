@@ -17,7 +17,11 @@ const SubName = () => {
 
   const fileInputRef = createRef<HTMLInputElement>();
 
-  const { data: sub, error, revalidate } = useSWR<Sub>(subName ? `/subs/${subName}` : null);
+  const {
+    data: sub,
+    error,
+    revalidate,
+  } = useSWR<Sub>(subName ? `/subs/${subName}` : null);
 
   const { authenticated, user } = useAuthState();
 
@@ -62,15 +66,11 @@ const SubName = () => {
     formData.append("type", fileInputRef.current.name);
 
     try {
-      await axios.post<Sub>(
-        `/subs/${sub.name}/image`,
-        formData,
-        {
-         headers:{ "Content-Type": "multipart/formData",}
-        }
-      );
+      await axios.post<Sub>(`/subs/${sub.name}/image`, formData, {
+        headers: { "Content-Type": "multipart/formData" },
+      });
 
-        revalidate()
+      revalidate();
     } catch (error) {}
   };
 
@@ -139,8 +139,8 @@ const SubName = () => {
 
           {/* Post and Sidebar */}
           <div className="container flex pt-5">
-                      <div className="w-160">{postMarkup}</div>
-                      <Sidebar sub={ sub}/>
+            <div className="w-160">{postMarkup}</div>
+            <Sidebar sub={sub} />
           </div>
         </>
       )}
