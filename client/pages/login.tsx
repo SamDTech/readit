@@ -38,7 +38,6 @@ export default function Register() {
 
       router.back();
     } catch (error) {
-      
       toast.error(error.response.data.message);
     }
   };

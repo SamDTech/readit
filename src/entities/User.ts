@@ -31,7 +31,7 @@ export class User extends Base {
   votes: Vote[];
 
   @BeforeInsert()
-  encryptPassword = async () => {
+  async encryptPassword()  {
     this.password = await bcrypt.hash(this.password, 12);
   };
 }
