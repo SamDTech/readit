@@ -7,6 +7,10 @@ import PostCard from "../../components/PostCard";
 import { Comment, Post } from "../../types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { GetServerSideProps } from "next";
+import { Request } from "express";
+import { Response } from "express";
+import axios from "axios";
 
 const username = () => {
   const router = useRouter();
@@ -81,7 +85,9 @@ const username = () => {
               <div className="p-3 text-center">
                 <h1 className="mb-3 text-xl">{data?.user.username}</h1>
                 <hr />
-                <p className='mt-3'>Joined {dayjs(data?.user.createdAt).format("MMM YYYY")}</p>
+                <p className="mt-3">
+                  Joined {dayjs(data?.user.createdAt).format("MMM YYYY")}
+                </p>
               </div>
             </div>
           </div>
@@ -92,3 +98,17 @@ const username = () => {
 };
 
 export default username;
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  try {
+    const cookie = req.headers.cookie;
+    if (!cookie) throw new Error("missing auth token");
+
+    await axios.get("/auth/me", { headers: { cookie } });
+    return {
+      props: {},
+    };
+  } catch (error) {
+    res.writeHead(307, { location: "/login" }).end();
+  }
+};
