@@ -13,6 +13,7 @@ import { User } from "../entities/User";
 import { user } from "../middlewares/user";
 import { Post } from "../entities/Post";
 import { makeid } from "../utils/helper";
+import { isEmpty } from "class-validator";
 
 const createSub = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -137,10 +138,30 @@ const uploadSubImage = asyncHandler(
   }
 );
 
+const searchSub = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { name } = req.params;
+
+    if (isEmpty(name)) {
+      return next(new AppError(404, "Name cannot be empty"));
+    }
+
+    const subs = await getRepository(Sub)
+      .createQueryBuilder()
+      .where("LOWER(name) LIKE :name", {
+        name: `%${name.toLowerCase().trim()}%`,
+      })
+      .getMany();
+
+    res.status(200).json(subs);
+  }
+);
+
 const router = Router();
 
 router.post("/", validationMiddleware(createSubDto), user, protect, createSub);
 router.get("/:name", user, getSub);
+router.get("/search/:name", searchSub);
 
 router.post(
   "/:name/image",

@@ -99,16 +99,3 @@ const username = () => {
 
 export default username;
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  try {
-    const cookie = req.headers.cookie;
-    if (!cookie) throw new Error("missing auth token");
-
-    await axios.get("/auth/me", { headers: { cookie } });
-    return {
-      props: {},
-    };
-  } catch (error) {
-    res.writeHead(307, { location: "/login" }).end();
-  }
-};
