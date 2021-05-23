@@ -1,14 +1,16 @@
 import Head from "next/head";
 import { Post, Sub } from "../types";
-import { DocumentContext } from "next/document";
 import PostCard from "../components/PostCard";
 import useSWR from "swr";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuthState } from "../context/authContext";
 
 const Home: React.FC<{ posts: Post[] }> = () => {
-  const { data: topSubs } = useSWR("/misc/top-subs");
+  const { data: topSubs } = useSWR<Sub[]>("/misc/top-subs");
   const { data: posts } = useSWR<Post[]>("/posts");
+
+  const { authenticated } = useAuthState();
   return (
     <>
       <Head>
@@ -30,19 +32,21 @@ const Home: React.FC<{ posts: Post[] }> = () => {
               </p>
             </div>
             {topSubs &&
-              topSubs.map((sub: Sub) => (
+              topSubs.map((sub) => (
                 <div
                   key={sub.name}
                   className="flex items-center px-4 py-2 text-xs border-b"
                 >
                   <Link href={`/r/${sub.name}`}>
-                    <Image
-                      className="rounded-full cursor-pointer "
-                      height={(6 * 16) / 4}
-                      width={(6 * 16) / 4}
-                      src={sub.imageUrl}
-                      alt="Sub"
-                    />
+                    <a>
+                      <Image
+                        className="rounded-full cursor-pointer "
+                        height={(6 * 16) / 4}
+                        width={(6 * 16) / 4}
+                        src={sub.imageUrl}
+                        alt="Sub"
+                      />
+                    </a>
                   </Link>
 
                   <Link href={`/r/${sub.name}`}>
@@ -55,6 +59,13 @@ const Home: React.FC<{ posts: Post[] }> = () => {
                 </div>
               ))}
           </div>
+          {authenticated && (
+            <div className="p-4 bg-white border-t-2">
+              <Link href="/subs/create">
+                <a className="w-full px-2 py-1 blue button">Create Community</a>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </>
