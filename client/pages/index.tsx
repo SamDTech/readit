@@ -18,13 +18,13 @@ const Home: React.FC<{ posts: Post[] }> = () => {
       </Head>
       <div className="container flex pt-4">
         {/* Post feeds */}
-        <div className="w-160">
+        <div className="w-full px-4 md:w-160 md:p-0">
           {posts &&
             posts.map((post) => <PostCard post={post} key={post.identifier} />)}
         </div>
 
         {/* Sidebars */}
-        <div className="ml-6 w-60">
+        <div className="hidden ml-6 w-60 md:block">
           <div className="bg-white rounded">
             <div className="p-4 border-b-2">
               <p className="text-lg font-semibold text-center">
