@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, useEffect } from "react";
 import useSWR from "swr";
 import Sidebar from "../../../../components/Sidebar";
 import { Post, Comment } from "../../../../types";
@@ -16,6 +16,8 @@ dayjs.extend(relativeTime);
 
 const PostPage = () => {
   const [newComment, setNewComment] = useState("");
+
+  const [description, setDescription] = useState("");
   const router = useRouter();
   const { slug, identifier, sub } = router.query;
 
@@ -62,16 +64,31 @@ const PostPage = () => {
       });
 
       setNewComment("");
-      revalidate()
+      revalidate();
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    if (!post) return;
+
+    let desc = post.body || post.title;
+
+    desc.substr(0, 158).concat(".."); // Hello..
+    setDescription(desc)
+
+  }, [post]);
+
   return (
     <>
       <Head>
-        <title>{post && post.title}</title>
+        {/* <title>{post && post.title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:description" content={description} />
+        <meta property="og:title" content={post?.title} />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:title" content={post?.title} /> */}
       </Head>
       <Link href={`/r/${sub}`}>
         <a>
