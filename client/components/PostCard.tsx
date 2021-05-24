@@ -6,12 +6,12 @@ import { Post } from "../types";
 import axios from "axios";
 import { classnames } from "tailwindcss-classnames";
 import ActionButton from "./ActionButton";
+import { useRouter } from "next/router";
+import { useAuthState } from "../context/authContext";
 
 dayjs.extend(relativeTime);
 
-
-
-const PostCard: React.FC<{ post: Post }> = ({
+const PostCard: React.FC<{ post: Post; revalidate?: Function }> = ({
   post: {
     identifier,
     voteScore,
@@ -25,21 +25,30 @@ const PostCard: React.FC<{ post: Post }> = ({
     slug,
     url,
   },
+  revalidate,
 }) => {
+  const { authenticated } = useAuthState();
+  const router = useRouter();
   const vote = async (value: number) => {
+    if (!authenticated) router.push("/login");
+
+    if (value === userVote) value = 0;
     try {
       const { data } = await axios.post("/misc/vote", {
         identifier,
         slug,
         value,
       });
-      console.log(data);
-      console.log(voteScore);
+      if (revalidate) revalidate();
     } catch (error) {}
   };
 
   return (
-    <div key={identifier} className="flex mb-4 bg-white rounded">
+    <div
+      key={identifier}
+      className="flex mb-4 bg-white rounded"
+      id={identifier}
+    >
       {/* Vote section */}
       <div className="w-10 py-3 text-center bg-gray-200 rounded-l">
         {/* upvote */}
