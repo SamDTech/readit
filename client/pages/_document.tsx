@@ -17,6 +17,7 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <title>Readit</title>
+          <link rel="icon" href="/logo.svg" type="image/svg+xml"/>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
             href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600&display=swap"
