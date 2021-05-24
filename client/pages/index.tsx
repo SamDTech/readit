@@ -17,9 +17,10 @@ const Home: React.FC<{ posts: Post[] }> = () => {
 
 
 
-  const { data, error, isValidating, mutate, size: page, setSize: setPage, revalidate  } = useSWRInfinite(
+  const { data, error, isValidating,  size: page, setSize: setPage, revalidate  } = useSWRInfinite(
   index => `/posts?page=${index}`
 )
+const isLoadingInitialData = !data && !error;
 
 const posts: Post[] = data ? [].concat(...data) : [];
 
@@ -57,11 +58,11 @@ const posts: Post[] = data ? [].concat(...data) : [];
       <div className="container flex pt-4">
         {/* Post feeds */}
         <div className="w-full px-4 md:w-160 md:p-0">
-          {isValidating && <p className="text-lg text-center">Loading..</p>}
+          {isLoadingInitialData && <p className="text-lg text-center">Loading..</p>}
           {posts &&
             posts.map((post) => <PostCard post={post} key={post.identifier} revalidate={revalidate} />)}
 
-          {isValidating && posts.length > 0 && <p className="text-lg text-center">Loading More..</p>}
+          {isLoadingInitialData && posts.length > 0 && <p className="text-lg text-center">Loading More..</p>}
         </div>
 
         {/* Sidebars */}
