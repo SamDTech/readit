@@ -26,10 +26,15 @@ const createPost = asyncHandler(
   }
 );
 
-const getPosts = asyncHandler(async (_: Request, res: Response) => {
+const getPosts = asyncHandler(async (req: Request, res: Response) => {
+  const currentPage: number = (req.query.page || 0) as number;
+  const postPerPage: number = (req.query.count || 8) as number;
+
   const posts = await Post.find({
     order: { createdAt: "DESC" },
     relations: ["comments", "votes", "sub"],
+    skip: currentPage * postPerPage,
+    take: postPerPage,
   });
 
   console.log(res.locals.user);
