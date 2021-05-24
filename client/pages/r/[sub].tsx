@@ -35,7 +35,7 @@ const SubName = () => {
     postMarkup = <p className="text-lg text-center">No Post Submitted Yet</p>;
   } else {
     postMarkup = sub.posts.map((post) => (
-      <PostCard key={post.identifier} post={post} />
+      <PostCard key={post.identifier} post={post} revalidate={revalidate} />
     ));
   }
 
