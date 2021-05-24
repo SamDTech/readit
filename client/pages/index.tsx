@@ -22,8 +22,10 @@ const Home: React.FC<{ posts: Post[] }> = () => {
 )
 const isLoadingInitialData = !data && !error;
 
-const posts: Post[] = data ? [].concat(...data) : [];
+  const posts: Post[] = data ? [].concat(...data) : [];
 
+  const description = "Reddit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!"
+    const title = "Readit: The front page of the internet";
 
   useEffect(() => {
     if (!posts || posts.length === 0) return;
@@ -53,16 +55,31 @@ const posts: Post[] = data ? [].concat(...data) : [];
   return (
     <>
       <Head>
-        <title>Readit: The front page of the internet</title>
+        <title>{ title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:title" content={title} />
       </Head>
       <div className="container flex pt-4">
         {/* Post feeds */}
         <div className="w-full px-4 md:w-160 md:p-0">
-          {isLoadingInitialData && <p className="text-lg text-center">Loading..</p>}
+          {isLoadingInitialData && (
+            <p className="text-lg text-center">Loading..</p>
+          )}
           {posts &&
-            posts.map((post) => <PostCard post={post} key={post.identifier} revalidate={revalidate} />)}
+            posts.map((post) => (
+              <PostCard
+                post={post}
+                key={post.identifier}
+                revalidate={revalidate}
+              />
+            ))}
 
-          {isLoadingInitialData && posts.length > 0 && <p className="text-lg text-center">Loading More..</p>}
+          {isLoadingInitialData && posts.length > 0 && (
+            <p className="text-lg text-center">Loading More..</p>
+          )}
         </div>
 
         {/* Sidebars */}

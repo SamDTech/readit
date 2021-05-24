@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import "../styles/icons.css";
 import { AuthProvider } from "../context/authContext";
 
-axios.defaults.baseURL = "http://localhost:4000/api";
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + '/api';
 axios.defaults.withCredentials = true;
 
 const fetcher = async (url: string) => {
