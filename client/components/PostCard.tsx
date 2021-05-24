@@ -24,6 +24,7 @@ const PostCard: React.FC<{ post: Post; revalidate?: Function }> = ({
     userVote,
     slug,
     url,
+    sub
   },
   revalidate,
 }) => {
@@ -77,7 +78,7 @@ const PostCard: React.FC<{ post: Post; revalidate?: Function }> = ({
         <div className="flex items-center">
           <Link href={`/r/${subName}`}>
             <img
-              src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+              src={sub.imageUrl}
               alt="default"
               className="w-6 h-6 mr-1 rounded-full cursor-pointer"
             />
